@@ -66,6 +66,78 @@
   lightbox?.addEventListener('click', event => { if (event.target === lightbox) closeLightbox(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && lightbox && !lightbox.hidden) closeLightbox(); });
 
+
+  // Version 5: Leistungskarten öffnen jeweils eine eigene Bildergalerie
+  const serviceLightbox = document.querySelector('.service-lightbox');
+  const serviceTitle = serviceLightbox?.querySelector('#service-lightbox-title');
+  const serviceImage = serviceLightbox?.querySelector('.service-lightbox-stage img');
+  const serviceCounter = serviceLightbox?.querySelector('.service-lightbox-counter');
+  const serviceClose = serviceLightbox?.querySelector('.service-lightbox-close');
+  const servicePrev = serviceLightbox?.querySelector('.service-lightbox-prev');
+  const serviceNext = serviceLightbox?.querySelector('.service-lightbox-next');
+  let serviceImages = [];
+  let serviceIndex = 0;
+  let serviceLastFocused = null;
+  let serviceTouchStartX = null;
+
+  const renderServiceImage = () => {
+    if (!serviceImage || !serviceImages.length) return;
+    serviceImage.src = serviceImages[serviceIndex];
+    serviceImage.alt = `${serviceTitle?.textContent || 'Leistung'} – Bild ${serviceIndex + 1}`;
+    if (serviceCounter) serviceCounter.textContent = `${serviceIndex + 1} / ${serviceImages.length}`;
+  };
+  const showServiceStep = step => {
+    if (!serviceImages.length) return;
+    serviceIndex = (serviceIndex + step + serviceImages.length) % serviceImages.length;
+    renderServiceImage();
+  };
+  const openServiceGallery = card => {
+    if (!serviceLightbox || !serviceImage) return;
+    serviceImages = (card.dataset.serviceImages || '').split('|').filter(Boolean);
+    if (!serviceImages.length) return;
+    serviceIndex = 0;
+    serviceLastFocused = card;
+    if (serviceTitle) serviceTitle.textContent = card.dataset.serviceTitle || card.querySelector('h3')?.textContent || 'Galerie';
+    renderServiceImage();
+    serviceLightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+    serviceClose?.focus();
+  };
+  const closeServiceGallery = () => {
+    if (!serviceLightbox) return;
+    serviceLightbox.hidden = true;
+    if (serviceImage) serviceImage.src = '';
+    document.body.style.overflow = '';
+    serviceLastFocused?.focus();
+  };
+
+  document.querySelectorAll('.service-gallery-card').forEach(card => {
+    card.addEventListener('click', () => openServiceGallery(card));
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openServiceGallery(card);
+      }
+    });
+  });
+  servicePrev?.addEventListener('click', () => showServiceStep(-1));
+  serviceNext?.addEventListener('click', () => showServiceStep(1));
+  serviceClose?.addEventListener('click', closeServiceGallery);
+  serviceLightbox?.addEventListener('click', event => { if (event.target === serviceLightbox) closeServiceGallery(); });
+  serviceLightbox?.addEventListener('touchstart', event => { serviceTouchStartX = event.changedTouches[0]?.clientX ?? null; }, { passive:true });
+  serviceLightbox?.addEventListener('touchend', event => {
+    if (serviceTouchStartX == null) return;
+    const dx = (event.changedTouches[0]?.clientX ?? serviceTouchStartX) - serviceTouchStartX;
+    if (Math.abs(dx) > 45) showServiceStep(dx < 0 ? 1 : -1);
+    serviceTouchStartX = null;
+  }, { passive:true });
+  document.addEventListener('keydown', event => {
+    if (!serviceLightbox || serviceLightbox.hidden) return;
+    if (event.key === 'Escape') closeServiceGallery();
+    if (event.key === 'ArrowLeft') showServiceStep(-1);
+    if (event.key === 'ArrowRight') showServiceStep(1);
+  });
+
   // Holzarten: Beispielansicht öffnen
   const woodModal = document.querySelector('.wood-modal');
   const woodModalImage = woodModal?.querySelector('.wood-modal-image');

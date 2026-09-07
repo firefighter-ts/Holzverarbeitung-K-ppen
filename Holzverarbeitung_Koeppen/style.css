@@ -47,3 +47,28 @@ a.button .whatsapp-icon{margin-right:9px;vertical-align:middle}
 .map-wrap{margin-top:58px}.map-heading{margin-bottom:24px}.map-frame{overflow:hidden;border-radius:22px;background:#e9e7df;box-shadow:var(--shadow)}.map-frame iframe{display:block;width:100%;height:430px;border:0}.map-link{display:inline-flex;margin-top:18px}
 @media(max-width:760px){.hero-logo{width:118px;margin-bottom:18px;border-radius:14px}.map-wrap{margin-top:42px}.map-frame iframe{height:340px}}
 @media(max-width:420px){.hero-logo{width:104px}.map-frame iframe{height:300px}}
+
+/* Version 5: klickbare Leistungsgalerien */
+.service-gallery-card{cursor:pointer;outline:none}
+.service-gallery-card:focus-visible{box-shadow:0 0 0 4px rgba(156,96,47,.18),var(--shadow);border-color:var(--wood)}
+.service-gallery-hint{display:inline-flex;margin-top:14px;color:var(--wood-dark);font-size:.82rem;font-weight:800;letter-spacing:.01em}
+.service-lightbox{position:fixed;inset:0;z-index:700;background:rgba(2,12,11,.94);display:grid;place-items:center;padding:24px}
+.service-lightbox[hidden]{display:none}
+.service-lightbox-shell{position:relative;width:min(1100px,100%);max-height:94vh;display:flex;flex-direction:column;gap:16px}
+.service-lightbox-shell h2{margin:0;padding-right:64px;color:#fff;font-size:clamp(1.5rem,3vw,2.4rem)}
+.service-lightbox-stage{position:relative;display:grid;grid-template-columns:64px 1fr 64px;align-items:center;gap:12px;min-height:0}
+.service-lightbox-stage img{display:block;width:100%;max-height:76vh;object-fit:contain;border-radius:18px;background:#0d1715;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.service-lightbox-close{position:absolute;right:0;top:-4px;width:48px;height:48px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:2rem;line-height:1;cursor:pointer}
+.service-lightbox-nav{width:54px;height:54px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:2.4rem;line-height:1;cursor:pointer}
+.service-lightbox-nav:hover,.service-lightbox-close:hover{background:rgba(255,255,255,.18)}
+.service-lightbox-footer{display:flex;justify-content:space-between;gap:20px;color:rgba(255,255,255,.72);font-size:.9rem}
+.service-lightbox-counter{font-weight:800;color:#fff}
+@media(max-width:760px){
+  .service-lightbox{padding:14px}
+  .service-lightbox-stage{grid-template-columns:1fr}
+  .service-lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:46px;height:46px;background:rgba(0,0,0,.45)}
+  .service-lightbox-prev{left:8px}.service-lightbox-next{right:8px}
+  .service-lightbox-stage img{max-height:70vh;border-radius:12px}
+  .service-lightbox-footer{flex-direction:column;gap:4px}
+  .service-lightbox-swipe{font-size:.8rem}
+}
